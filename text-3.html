@@ -1,0 +1,1772 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YAKUZAS XITS - Sistema Oculto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        :root {
+            --primary: #0a0a0a;
+            --secondary: #1a1a1a;
+            --yakuza-red: #ff0033;
+            --yakuza-gold: #ffd700;
+            --tools-accent: #ff00ff;
+            --text: #f0f0f0;
+            --text-secondary: #aaa;
+            --success: #2ed573;
+            --danger: #ff4757;
+            --warning: #ffa502;
+            --tool-1: #00ff00;
+            --tool-2: #0088ff;
+            --tool-3: #ff4500;
+            --tool-4: #9d00ff;
+            --tool-5: #00ffff;
+            --tool-6: #ffaa00;
+        }
+
+        body {
+            background-color: var(--primary);
+            color: var(--text);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(255, 0, 51, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 85% 30%, rgba(255, 0, 255, 0.05) 0%, transparent 20%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Dragão Flutuante (Ícone do Painel Admin Oculto) */
+        .dragon-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--yakuza-red), var(--yakuza-gold));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0 5px 20px rgba(255, 0, 51, 0.4);
+            transition: all 0.3s;
+            animation: dragon-float 3s infinite ease-in-out;
+        }
+
+        @keyframes dragon-float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        .dragon-icon:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 8px 30px rgba(255, 0, 51, 0.6);
+            animation: none;
+        }
+
+        .dragon-icon::after {
+            content: 'Admin';
+            position: absolute;
+            bottom: -25px;
+            font-size: 10px;
+            color: var(--yakuza-gold);
+            opacity: 0;
+            transition: opacity 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dragon-icon:hover::after {
+            opacity: 1;
+        }
+
+        /* Modal de Acesso Admin Oculto */
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .admin-modal-content {
+            background: linear-gradient(145deg, rgba(20,20,20,0.98), rgba(10,10,10,0.99));
+            border-radius: 20px;
+            padding: 50px 40px;
+            max-width: 400px;
+            width: 90%;
+            border: 3px solid var(--yakuza-red);
+            box-shadow: 0 30px 60px rgba(255, 0, 51, 0.4);
+            position: relative;
+            animation: modal-appear 0.4s ease;
+            text-align: center;
+        }
+
+        @keyframes modal-appear {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .admin-modal-header {
+            margin-bottom: 30px;
+        }
+
+        .admin-modal-icon {
+            font-size: 60px;
+            color: var(--yakuza-gold);
+            margin-bottom: 20px;
+            animation: dragon-pulse 2s infinite;
+        }
+
+        @keyframes dragon-pulse {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.1); filter: brightness(1.3); }
+        }
+
+        .admin-modal-header h2 {
+            font-size: 28px;
+            background: linear-gradient(to right, var(--yakuza-red), var(--yakuza-gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* Tela de Login das Ferramentas */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: linear-gradient(145deg, rgba(20,20,20,0.95), rgba(10,10,10,0.97));
+            border-radius: 20px;
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--tools-accent);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 0, 255, 0.1) 50%,
+                transparent 70%
+            );
+            animation: scan 3s infinite linear;
+            pointer-events: none;
+        }
+
+        .login-header {
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            margin: 0 auto 25px;
+            color: white;
+            background: linear-gradient(135deg, var(--tools-accent), #cc00cc);
+            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.4);
+        }
+
+        .login-header h2 {
+            font-size: 28px;
+            color: var(--tools-accent);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* Formulários */
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-weight: 500;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--tools-accent);
+        }
+
+        .input-with-icon input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+
+        .input-with-icon input:focus {
+            outline: none;
+            border-color: var(--tools-accent);
+            box-shadow: 0 0 0 2px rgba(255, 0, 255, 0.2);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--tools-accent);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Botões */
+        .btn {
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--tools-accent), #cc00cc);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 0, 255, 0.4);
+        }
+
+        .btn-admin {
+            background: linear-gradient(135deg, var(--yakuza-red), var(--yakuza-gold));
+            color: white;
+            width: 100%;
+        }
+
+        .btn-admin:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 0, 51, 0.4);
+        }
+
+        /* Painel de Ferramentas */
+        #toolsSite {
+            display: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header do Painel de Ferramentas */
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 0;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .site-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--tools-accent), #cc00cc, transparent);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: white;
+            background: linear-gradient(135deg, var(--tools-accent), #cc00cc);
+        }
+
+        .logo-text h1 {
+            font-size: 32px;
+            background: linear-gradient(to right, var(--tools-accent), #cc00cc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        /* Painel de Ferramentas */
+        .tools-panel {
+            background: linear-gradient(145deg, rgba(20,20,20,0.95), rgba(10,10,10,0.97));
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(255, 0, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tools-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--tools-accent), #cc00cc);
+        }
+
+        /* Grid de Ferramentas */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .tool-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--tools-accent);
+            box-shadow: 0 15px 30px rgba(255, 0, 255, 0.3);
+        }
+
+        .tool-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 20px;
+            color: white;
+        }
+
+        .tool-card:nth-child(1) .tool-icon {
+            background: linear-gradient(135deg, var(--tool-1), #00aa00);
+        }
+
+        .tool-card:nth-child(2) .tool-icon {
+            background: linear-gradient(135deg, var(--tool-2), #0066cc);
+        }
+
+        .tool-card:nth-child(3) .tool-icon {
+            background: linear-gradient(135deg, var(--tool-3), #cc0000);
+        }
+
+        .tool-card:nth-child(4) .tool-icon {
+            background: linear-gradient(135deg, var(--tool-4), #6a00cc);
+        }
+
+        .tool-card:nth-child(5) .tool-icon {
+            background: linear-gradient(135deg, var(--tool-5), #008888);
+        }
+
+        .tool-card:nth-child(6) .tool-icon {
+            background: linear-gradient(135deg, var(--tool-6), #cc8800);
+        }
+
+        .tool-card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .tool-card p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .made-by {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--yakuza-red);
+            font-style: italic;
+        }
+
+        /* Sistema de Chaves */
+        .key-status {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .status-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--danger);
+        }
+
+        .status-dot.active {
+            background-color: var(--success);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .time-display {
+            font-size: 28px;
+            color: var(--yakuza-gold);
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Console */
+        .console {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .console-line {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Painel Administrativo Oculto */
+        #adminPanel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 10001;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .admin-panel-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, rgba(20,20,20,0.98), rgba(10,10,10,0.99));
+            border-radius: 20px;
+            padding: 40px;
+            border: 3px solid var(--yakuza-red);
+            box-shadow: 0 30px 60px rgba(255, 0, 51, 0.4);
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .admin-header h1 {
+            font-size: 36px;
+            background: linear-gradient(to right, var(--yakuza-red), var(--yakuza-gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .admin-header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Sistema de Chaves no Admin */
+        .keys-generator {
+            margin-bottom: 40px;
+        }
+
+        .keys-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .key-generator-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 0, 51, 0.2);
+            text-align: center;
+        }
+
+        .key-generator-card h3 {
+            font-size: 22px;
+            color: var(--yakuza-gold);
+            margin-bottom: 15px;
+        }
+
+        .key-display {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            word-break: break-all;
+            color: var(--yakuza-gold);
+        }
+
+        /* Histórico de Chaves */
+        .keys-history {
+            margin-top: 40px;
+        }
+
+        .history-list {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Alertas */
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-error {
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid var(--danger);
+            color: #ffcccc;
+        }
+
+        .alert-success {
+            background: rgba(46, 213, 115, 0.1);
+            border: 1px solid var(--success);
+            color: #ccffdd;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .dragon-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+                bottom: 15px;
+                right: 15px;
+            }
+            
+            .tools-grid, .keys-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .site-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .login-box, .admin-modal-content, .admin-panel-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ícone do Dragão (Painel Admin Oculto) -->
+    <div class="dragon-icon" id="dragonIcon">
+        <i class="fas fa-dragon"></i>
+    </div>
+
+    <!-- Modal de Acesso Admin -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-modal-content">
+            <div class="admin-modal-header">
+                <div class="admin-modal-icon">
+                    <i class="fas fa-dragon"></i>
+                </div>
+                <h2>Acesso Administrativo</h2>
+                <p style="color: var(--text-secondary);">Acesso exclusivo do administrador YAKUZAS</p>
+            </div>
+            
+            <div class="alert alert-error" id="adminModalError">
+                <i class="fas fa-exclamation-circle"></i> Senha mestra incorreta
+            </div>
+            
+            <form id="adminModalForm">
+                <div class="form-group">
+                    <label for="adminMasterPassword">Senha Mestra</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-key"></i>
+                        <input type="password" id="adminMasterPassword" placeholder="Digite a senha mestra" required autofocus>
+                        <span class="password-toggle" id="toggleMasterPassword">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-admin">
+                    <i class="fas fa-unlock"></i> Acessar Painel Admin
+                </button>
+                
+                <button type="button" class="btn btn-secondary" id="closeAdminModal" style="width: 100%; margin-top: 15px; background: rgba(255,255,255,0.1); color: var(--text); border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fas fa-times"></i> Fechar
+                </button>
+            </form>
+            
+            <div style="margin-top: 30px; color: var(--text-secondary); font-size: 11px;">
+                <p><i class="fas fa-exclamation-triangle"></i> Acesso restrito ao administrador do sistema</p>
+                <p>Esta senha não é a mesma das chaves temporárias</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Login das Ferramentas -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="login-icon">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <h2>YAKUZAS XITS</h2>
+                <p>Sistema de Ferramentas de Jogo</p>
+            </div>
+            
+            <div class="alert alert-error" id="loginError">
+                <i class="fas fa-exclamation-circle"></i> Chave de ativação inválida
+            </div>
+            
+            <div class="alert alert-success" id="loginSuccess">
+                <i class="fas fa-check-circle"></i> Chave ativada com sucesso!
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="activationKey">Chave de Ativação</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-key"></i>
+                        <input type="text" id="activationKey" placeholder="Digite sua chave de 7, 30 ou 60 dias" required autofocus>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 12px; color: var(--text-secondary);">
+                        <i class="fas fa-info-circle"></i> Use uma chave temporária válida
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    <i class="fas fa-play"></i> Ativar Ferramentas
+                </button>
+            </form>
+            
+            <div style="margin-top: 30px; color: var(--text-secondary); font-size: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                <p><i class="fas fa-dragon"></i> Sistema desenvolvido por YAKUZAS</p>
+                <p>Suporte: (15) 99917-31963</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Painel de Ferramentas -->
+    <div id="toolsSite">
+        <div class="container">
+            <header class="site-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>YAKUZAS XITS</h1>
+                        <p>Ferramentas de Jogo Ativas</p>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" id="toolsLogoutBtn" style="background: rgba(255,71,87,0.1); color: var(--danger); border: 1px solid var(--danger);">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </header>
+
+            <!-- Status da Chave -->
+            <div class="key-status">
+                <div class="status-info">
+                    <div>
+                        <div style="font-size: 14px; color: var(--text-secondary);">Status da Licença</div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+                            <div class="status-dot" id="keyStatusDot"></div>
+                            <span id="keyStatusText" style="font-size: 16px;">Chave não ativada</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="activateNewKeyBtn">
+                        <i class="fas fa-key"></i> Ativar Nova Chave
+                    </button>
+                </div>
+                
+                <div class="time-display" id="timeRemaining">
+                    --:--:--
+                </div>
+                
+                <div style="text-align: center; color: var(--text-secondary); font-size: 14px;">
+                    <i class="far fa-clock"></i> Tempo restante da licença
+                </div>
+            </div>
+
+            <!-- Ferramentas -->
+            <div class="tools-panel">
+                <h2 style="color: var(--tools-accent); margin-bottom: 10px;">
+                    <i class="fas fa-tools"></i> Ferramentas YAKUZAS
+                </h2>
+                <p style="color: var(--text-secondary); margin-bottom: 30px;">
+                    Sistema completo de ferramentas para jogos - Feito por YAKUZAS
+                </p>
+                
+                <div class="tools-grid">
+                    <!-- Head Lock -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3>Head Lock</h3>
+                        <p>Sistema de bloqueio automático na cabeça do inimigo com precisão extrema.</p>
+                        <label class="toggle-switch" style="position: relative; display: inline-block; width: 60px; height: 30px;">
+                            <input type="checkbox" id="headlockToggle" disabled>
+                            <span class="toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 30px; border: 2px solid rgba(255,255,255,0.2);">
+                                <span style="position: absolute; height: 22px; width: 22px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%;"></span>
+                            </span>
+                        </label>
+                        <div class="made-by">Feito por YAKUZAS</div>
+                    </div>
+                    
+                    <!-- Tracking -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-satellite"></i>
+                        </div>
+                        <h3>Tracking</h3>
+                        <p>Rastreamento em tempo real de todos os jogadores no mapa com visão completa.</p>
+                        <label class="toggle-switch" style="position: relative; display: inline-block; width: 60px; height: 30px;">
+                            <input type="checkbox" id="trackingToggle" disabled>
+                            <span class="toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 30px; border: 2px solid rgba(255,255,255,0.2);">
+                                <span style="position: absolute; height: 22px; width: 22px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%;"></span>
+                            </span>
+                        </label>
+                        <div class="made-by">Feito por YAKUZAS</div>
+                    </div>
+                    
+                    <!-- Pression -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-hand-rock"></i>
+                        </div>
+                        <h3>Pression</h3>
+                        <p>Sistema de pressão automática que mantém fogo constante e preciso no alvo.</p>
+                        <label class="toggle-switch" style="position: relative; display: inline-block; width: 60px; height: 30px;">
+                            <input type="checkbox" id="pressionToggle" disabled>
+                            <span class="toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 30px; border: 2px solid rgba(255,255,255,0.2);">
+                                <span style="position: absolute; height: 22px; width: 22px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%;"></span>
+                            </span>
+                        </label>
+                        <div class="made-by">Feito por YAKUZAS</div>
+                    </div>
+                    
+                    <!-- Aimbot -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-crosshairs"></i>
+                        </div>
+                        <h3>Aimbot</h3>
+                        <p>Mira automática com ajuste fino de sensibilidade e priorização inteligente.</p>
+                        <label class="toggle-switch" style="position: relative; display: inline-block; width: 60px; height: 30px;">
+                            <input type="checkbox" id="aimbotToggle" disabled>
+                            <span class="toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 30px; border: 2px solid rgba(255,255,255,0.2);">
+                                <span style="position: absolute; height: 22px; width: 22px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%;"></span>
+                            </span>
+                        </label>
+                        <div class="made-by">Feito por YAKUZAS</div>
+                    </div>
+                    
+                    <!-- Headtrick -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Headtrick</h3>
+                        <p>Previsão de movimento com IA avançada para antecipar ações dos oponentes.</p>
+                        <label class="toggle-switch" style="position: relative; display: inline-block; width: 60px; height: 30px;">
+                            <input type="checkbox" id="headtrickToggle" disabled>
+                            <span class="toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 30px; border: 2px solid rgba(255,255,255,0.2);">
+                                <span style="position: absolute; height: 22px; width: 22px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%;"></span>
+                            </span>
+                        </label>
+                        <div class="made-by">Feito por YAKUZAS</div>
+                    </div>
+                    
+                    <!-- Ativar Free Fire -->
+                    <div class="tool-card">
+                        <div class="tool-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h3>Ativar Free Fire</h3>
+                        <p>Abre o Free Fire automaticamente com todas as ferramentas YAKUZAS ativas.</p>
+                        <button class="btn btn-primary" style="width: 100%;" id="activateFireBtn" disabled>
+                            <i class="fas fa-rocket"></i> Abrir Free Fire
+                        </button>
+                        <div class="made-by">Feito por YAKUZAS</div>
+                    </div>
+                </div>
+                
+                <!-- Console -->
+                <div style="margin-top: 40px;">
+                    <h3 style="color: var(--tools-accent); margin-bottom: 15px;">
+                        <i class="fas fa-terminal"></i> Console do Sistema
+                    </h3>
+                    <div class="console" id="toolsConsole">
+                        <div class="console-line">Sistema YAKUZAS XITS inicializado</div>
+                        <div class="console-line">Aguardando ativação da chave...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <footer>
+                <p>YAKUZAS XITS - Sistema de Ferramentas © 2024</p>
+                <p style="font-size: 10px; margin-top: 10px;">
+                    <i class="fas fa-dragon"></i> Desenvolvido por YAKUZAS | Suporte: (15) 99917-31963
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Painel Administrativo Oculto -->
+    <div id="adminPanel">
+        <div class="admin-panel-content">
+            <div class="admin-header">
+                <h1>Painel Administrativo YAKUZAS</h1>
+                <p>Sistema oculto de gerenciamento de chaves</p>
+            </div>
+            
+            <!-- Botão para voltar -->
+            <button class="btn btn-admin" id="closeAdminPanel" style="margin-bottom: 30px;">
+                <i class="fas fa-times"></i> Fechar Painel Admin
+            </button>
+            
+            <!-- Gerador de Chaves -->
+            <div class="keys-generator">
+                <h2 style="color: var(--yakuza-gold); margin-bottom: 20px;">
+                    <i class="fas fa-key"></i> Gerador de Chaves Temporárias
+                </h2>
+                <p style="color: var(--text-secondary); margin-bottom: 30px;">
+                    Gere chaves de ativação para os usuários das ferramentas YAKUZAS
+                </p>
+                
+                <div class="keys-grid">
+                    <!-- Chave 7 Dias -->
+                    <div class="key-generator-card">
+                        <h3>7 DIAS</h3>
+                        <p style="color: var(--text-secondary);">Acesso completo por 7 dias</p>
+                        <div class="key-display" id="adminKey7Days">
+                            Clique em Gerar Chave
+                        </div>
+                        <button class="btn btn-admin" data-days="7">
+                            <i class="fas fa-bolt"></i> Gerar Chave 7 Dias
+                        </button>
+                    </div>
+                    
+                    <!-- Chave 30 Dias -->
+                    <div class="key-generator-card">
+                        <h3>30 DIAS</h3>
+                        <p style="color: var(--text-secondary);">Acesso completo por 30 dias</p>
+                        <div class="key-display" id="adminKey30Days">
+                            Clique em Gerar Chave
+                        </div>
+                        <button class="btn btn-admin" data-days="30">
+                            <i class="fas fa-bolt"></i> Gerar Chave 30 Dias
+                        </button>
+                    </div>
+                    
+                    <!-- Chave 60 Dias -->
+                    <div class="key-generator-card">
+                        <h3>60 DIAS</h3>
+                        <p style="color: var(--text-secondary);">Acesso completo por 60 dias</p>
+                        <div class="key-display" id="adminKey60Days">
+                            Clique em Gerar Chave
+                        </div>
+                        <button class="btn btn-admin" data-days="60">
+                            <i class="fas fa-bolt"></i> Gerar Chave 60 Dias
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Histórico de Chaves -->
+            <div class="keys-history">
+                <h2 style="color: var(--yakuza-gold); margin-bottom: 20px;">
+                    <i class="fas fa-history"></i> Histórico de Chaves Geradas
+                </h2>
+                
+                <div class="history-list" id="adminHistoryList">
+                    <div class="history-item" style="color: var(--text-secondary); text-align: center;">
+                        Nenhuma chave gerada ainda
+                    </div>
+                </div>
+            </div>
+            
+            <footer style="margin-top: 40px;">
+                <p>Painel Administrativo YAKUZAS - Acesso Restrito</p>
+                <p style="font-size: 10px; margin-top: 10px;">
+                    <i class="fas fa-shield-alt"></i> Sistema protegido por senha mestra | Chaves temporárias não funcionam aqui
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // ================= CONFIGURAÇÃO DO SISTEMA =================
+        const SYSTEM_CONFIG = {
+            masterPassword: "NEGROAURA20K", // Senha mestra do painel admin
+            keyPrefix: "YAKUZA-"
+        };
+        
+        // ================= VARIÁVEIS GLOBAIS =================
+        let activeKey = null;
+        let keyExpiration = null;
+        let countdownInterval = null;
+        
+        // ================= INICIALIZAÇÃO =================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos do dragão (ícone admin)
+            const dragonIcon = document.getElementById('dragonIcon');
+            const adminModal = document.getElementById('adminModal');
+            const adminModalForm = document.getElementById('adminModalForm');
+            const closeAdminModal = document.getElementById('closeAdminModal');
+            const toggleMasterPassword = document.getElementById('toggleMasterPassword');
+            
+            // Elementos do login das ferramentas
+            const loginContainer = document.getElementById('loginContainer');
+            const loginForm = document.getElementById('loginForm');
+            const loginError = document.getElementById('loginError');
+            const loginSuccess = document.getElementById('loginSuccess');
+            const activationKeyInput = document.getElementById('activationKey');
+            
+            // Elementos do painel de ferramentas
+            const toolsSite = document.getElementById('toolsSite');
+            const toolsLogoutBtn = document.getElementById('toolsLogoutBtn');
+            const activateNewKeyBtn = document.getElementById('activateNewKeyBtn');
+            const activateFireBtn = document.getElementById('activateFireBtn');
+            
+            // Elementos do painel administrativo
+            const adminPanel = document.getElementById('adminPanel');
+            const closeAdminPanel = document.getElementById('closeAdminPanel');
+            const adminHistoryList = document.getElementById('adminHistoryList');
+            
+            // Controles das ferramentas
+            const headlockToggle = document.getElementById('headlockToggle');
+            const trackingToggle = document.getElementById('trackingToggle');
+            const pressionToggle = document.getElementById('pressionToggle');
+            const aimbotToggle = document.getElementById('aimbotToggle');
+            const headtrickToggle = document.getElementById('headtrickToggle');
+            
+            // ================= DRAGÃO / PAINEL ADMIN =================
+            
+            // Abrir modal admin ao clicar no dragão
+            dragonIcon.addEventListener('click', function() {
+                adminModal.style.display = 'flex';
+                document.getElementById('adminMasterPassword').focus();
+                document.getElementById('adminModalError').style.display = 'none';
+            });
+            
+            // Alternar visibilidade da senha mestra
+            toggleMasterPassword.addEventListener('click', function() {
+                const input = document.getElementById('adminMasterPassword');
+                const type = input.type === 'password' ? 'text' : 'password';
+                input.type = type;
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+            
+            // Validar senha mestra
+            adminModalForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const password = document.getElementById('adminMasterPassword').value;
+                
+                if (password === SYSTEM_CONFIG.masterPassword) {
+                    adminModal.style.display = 'none';
+                    adminPanel.style.display = 'block';
+                    loadAdminHistory();
+                    adminModalForm.reset();
+                } else {
+                    document.getElementById('adminModalError').style.display = 'block';
+                    document.getElementById('adminMasterPassword').value = '';
+                    document.getElementById('adminMasterPassword').focus();
+                }
+            });
+            
+            // Fechar modal admin
+            closeAdminModal.addEventListener('click', function() {
+                adminModal.style.display = 'none';
+                adminModalForm.reset();
+                document.getElementById('adminModalError').style.display = 'none';
+            });
+            
+            // Fechar painel admin
+            closeAdminPanel.addEventListener('click', function() {
+                adminPanel.style.display = 'none';
+            });
+            
+            // Gerar chaves no painel admin
+            document.querySelectorAll('.keys-generator .btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const days = parseInt(this.dataset.days);
+                    generateAdminKey(days);
+                });
+            });
+            
+            // ================= LOGIN DAS FERRAMENTAS =================
+            
+            // Ativar ferramentas com chave
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const key = activationKeyInput.value.trim();
+                
+                if (validateKey(key)) {
+                    activateToolsWithKey(key);
+                    loginError.style.display = 'none';
+                    loginSuccess.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        loginContainer.style.display = 'none';
+                        toolsSite.style.display = 'block';
+                    }, 1000);
+                } else {
+                    loginSuccess.style.display = 'none';
+                    loginError.style.display = 'block';
+                    activationKeyInput.value = '';
+                    activationKeyInput.focus();
+                }
+            });
+            
+            // ================= PAINEL DE FERRAMENTAS =================
+            
+            // Logout das ferramentas
+            toolsLogoutBtn.addEventListener('click', function() {
+                if (confirm("Sair das Ferramentas YAKUZAS?")) {
+                    toolsSite.style.display = 'none';
+                    loginContainer.style.display = 'flex';
+                    loginForm.reset();
+                    loginError.style.display = 'none';
+                    loginSuccess.style.display = 'none';
+                    clearInterval(countdownInterval);
+                    deactivateTools();
+                }
+            });
+            
+            // Ativar nova chave
+            activateNewKeyBtn.addEventListener('click', function() {
+                toolsSite.style.display = 'none';
+                loginContainer.style.display = 'flex';
+                loginForm.reset();
+                loginError.style.display = 'none';
+                loginSuccess.style.display = 'none';
+            });
+            
+            // Ativar Free Fire
+            activateFireBtn.addEventListener('click', function() {
+                if (!activeKey) return;
+                
+                const message = `
+                🎮 FREE FIRE - YAKUZAS XITS 🎮
+                
+                Ferramentas ativas:
+                • Head Lock: ${headlockToggle.checked ? '✅' : '❌'}
+                • Tracking: ${trackingToggle.checked ? '✅' : '❌'}
+                • Pression: ${pressionToggle.checked ? '✅' : '❌'}
+                • Aimbot: ${aimbotToggle.checked ? '✅' : '❌'}
+                • Headtrick: ${headtrickToggle.checked ? '✅' : '❌'}
+                
+                Tempo restante: ${document.getElementById('timeRemaining').textContent}
+                
+                Sistema YAKUZAS ativado com sucesso! 🐉
+                `;
+                
+                alert(message);
+                addToolsConsole("Free Fire ativado com ferramentas YAKUZAS");
+            });
+            
+            // Controles das ferramentas
+            const toolToggles = [headlockToggle, trackingToggle, pressionToggle, aimbotToggle, headtrickToggle];
+            toolToggles.forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    if (!activeKey) {
+                        this.checked = false;
+                        return;
+                    }
+                    addToolsConsole(`${this.id.replace('Toggle', '')} ${this.checked ? 'ativado' : 'desativado'}`);
+                });
+            });
+            
+            // Verificar chave ativa ao carregar
+            checkActiveKey();
+        });
+        
+        // ================= FUNÇÕES DO SISTEMA =================
+        
+        // Gerar chave no painel admin
+        function generateAdminKey(days) {
+            // Gerar chave única
+            const timestamp = Date.now();
+            const random = Math.random().toString(36).substr(2, 8).toUpperCase();
+            const key = `${SYSTEM_CONFIG.keyPrefix}${days}D-${random}-${timestamp.toString(36).toUpperCase()}`;
+            
+            // Calcular data de expiração
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + days);
+            
+            // Salvar chave
+            const keyData = {
+                key: key,
+                days: days,
+                generated: new Date().toISOString(),
+                expires: expirationDate.toISOString(),
+                used: false
+            };
+            
+            // Armazenar no localStorage
+            let keys = JSON.parse(localStorage.getItem('yakuza_keys') || '[]');
+            keys.push(keyData);
+            localStorage.setItem('yakuza_keys', JSON.stringify(keys));
+            
+            // Atualizar display
+            document.getElementById(`adminKey${days}Days`).textContent = key;
+            
+            // Adicionar ao histórico
+            addToAdminHistory(keyData);
+            
+            // Copiar para área de transferência
+            navigator.clipboard.writeText(key).then(() => {
+                alert(`✅ Chave de ${days} dias gerada e copiada!\n\nChave: ${key}\n\nExpira em: ${expirationDate.toLocaleDateString()}`);
+            });
+            
+            return key;
+        }
+        
+        // Validar chave das ferramentas
+        function validateKey(key) {
+            if (!key.startsWith(SYSTEM_CONFIG.keyPrefix)) return false;
+            
+            // Verificar no localStorage
+            const keys = JSON.parse(localStorage.getItem('yakuza_keys') || '[]');
+            const keyData = keys.find(k => k.key === key);
+            
+            if (!keyData) return false;
+            
+            // Verificar se não expirou
+            const now = new Date();
+            const expiration = new Date(keyData.expires);
+            
+            if (now > expiration) {
+                // Remover chave expirada
+                const updatedKeys = keys.filter(k => k.key !== key);
+                localStorage.setItem('yakuza_keys', JSON.stringify(updatedKeys));
+                return false;
+            }
+            
+            // Marcar como usada
+            keyData.used = true;
+            keyData.usedAt = new Date().toISOString();
+            localStorage.setItem('yakuza_keys', JSON.stringify(keys));
+            
+            return keyData;
+        }
+        
+        // Ativar ferramentas com chave
+        function activateToolsWithKey(key) {
+            const keyData = validateKey(key);
+            
+            if (!keyData) {
+                alert("Chave inválida ou expirada!");
+                return false;
+            }
+            
+            // Ativar chave
+            activeKey = keyData;
+            keyExpiration = new Date(keyData.expires);
+            
+            // Salvar chave ativa
+            localStorage.setItem('active_yakuza_key', JSON.stringify(keyData));
+            
+            // Atualizar interface
+            updateKeyStatus();
+            startCountdown();
+            enableTools();
+            
+            addToolsConsole(`Chave de ${keyData.days} dias ativada com sucesso!`, 'success');
+            return true;
+        }
+        
+        // Atualizar status da chave
+        function updateKeyStatus() {
+            if (!activeKey) return;
+            
+            const statusDot = document.getElementById('keyStatusDot');
+            const statusText = document.getElementById('keyStatusText');
+            
+            statusDot.className = 'status-dot active';
+            statusText.textContent = `Chave ativa - ${activeKey.days} dias restantes`;
+            
+            updateTimeRemaining();
+        }
+        
+        // Iniciar contador regressivo
+        function startCountdown() {
+            clearInterval(countdownInterval);
+            
+            countdownInterval = setInterval(() => {
+                if (!keyExpiration) return;
+                
+                const now = new Date();
+                const diff = keyExpiration - now;
+                
+                if (diff <= 0) {
+                    clearInterval(countdownInterval);
+                    deactivateKey();
+                    return;
+                }
+                
+                updateTimeRemaining();
+            }, 1000);
+        }
+        
+        // Atualizar tempo restante
+        function updateTimeRemaining() {
+            if (!keyExpiration) return;
+            
+            const now = new Date();
+            const diff = keyExpiration - now;
+            
+            if (diff <= 0) {
+                document.getElementById('timeRemaining').textContent = "EXPIRADA";
+                return;
+            }
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            if (days > 0) {
+                document.getElementById('timeRemaining').textContent = `${days}d ${hours}h ${minutes}m`;
+            } else {
+                document.getElementById('timeRemaining').textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+        
+        // Desativar chave expirada
+        function deactivateKey() {
+            if (!activeKey) return;
+            
+            activeKey = null;
+            keyExpiration = null;
+            localStorage.removeItem('active_yakuza_key');
+            
+            document.getElementById('keyStatusDot').className = 'status-dot';
+            document.getElementById('keyStatusText').textContent = 'Chave expirada';
+            document.getElementById('timeRemaining').textContent = '--:--:--';
+            
+            disableTools();
+            
+            alert("⚠️ SUA CHAVE EXPIROU ⚠️\n\nAdquira uma nova chave para continuar usando as ferramentas YAKUZAS.");
+            
+            addToolsConsole("Chave expirada! Adquira uma nova.", 'error');
+        }
+        
+        // Desativar ferramentas (logout)
+        function deactivateTools() {
+            activeKey = null;
+            keyExpiration = null;
+            
+            document.getElementById('keyStatusDot').className = 'status-dot';
+            document.getElementById('keyStatusText').textContent = 'Chave não ativada';
+            document.getElementById('timeRemaining').textContent = '--:--:--';
+            
+            disableTools();
+            
+            addToolsConsole("Ferramentas desativadas", 'info');
+        }
+        
+        // Habilitar ferramentas
+        function enableTools() {
+            const toggles = ['headlockToggle', 'trackingToggle', 'pressionToggle', 'aimbotToggle', 'headtrickToggle'];
+            toggles.forEach(toggleId => {
+                const toggle = document.getElementById(toggleId);
+                if (toggle) toggle.disabled = false;
+            });
+            
+            document.getElementById('activateFireBtn').disabled = false;
+            
+            addToolsConsole("Todas as ferramentas habilitadas");
+        }
+        
+        // Desabilitar ferramentas
+        function disableTools() {
+            const toggles = ['headlockToggle', 'trackingToggle', 'pressionToggle', 'aimbotToggle', 'headtrickToggle'];
+            toggles.forEach(toggleId => {
+                const toggle = document.getElementById(toggleId);
+                if (toggle) {
+                    toggle.checked = false;
+                    toggle.disabled = true;
+                }
+            });
+            
+            document.getElementById('activateFireBtn').disabled = true;
+            
+            addToolsConsole("Ferramentas desabilitadas", 'error');
+        }
+        
+        // Verificar chave ativa ao carregar
+        function checkActiveKey() {
+            const savedKey = localStorage.getItem('active_yakuza_key');
+            
+            if (savedKey) {
+                try {
+                    const keyData = JSON.parse(savedKey);
+                    const expiration = new Date(keyData.expires);
+                    const now = new Date();
+                    
+                    if (now > expiration) {
+                        localStorage.removeItem('active_yakuza_key');
+                        return;
+                    }
+                    
+                    activeKey = keyData;
+                    keyExpiration = expiration;
+                    
+                    // Se houver chave ativa, ir direto para ferramentas
+                    document.getElementById('loginContainer').style.display = 'none';
+                    document.getElementById('toolsSite').style.display = 'block';
+                    updateKeyStatus();
+                    startCountdown();
+                    enableTools();
+                    
+                } catch (e) {
+                    localStorage.removeItem('active_yakuza_key');
+                }
+            }
+        }
+        
+        // Adicionar ao histórico admin
+        function addToAdminHistory(keyData) {
+            const historyList = document.getElementById('adminHistoryList');
+            
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            
+            const date = new Date(keyData.generated).toLocaleString();
+            const expires = new Date(keyData.expires).toLocaleDateString();
+            
+            historyItem.innerHTML = `
+                <div>
+                    <div style="color: var(--yakuza-gold); font-family: 'Courier New', monospace; font-size: 14px;">
+                        ${keyData.key}
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-secondary);">
+                        ${keyData.days} dias | Gerada: ${date}
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="color: ${keyData.used ? 'var(--success)' : 'var(--warning)'}; font-size: 12px;">
+                        ${keyData.used ? '✅ USADA' : '🔄 DISPONÍVEL'}
+                    </div>
+                    <div style="font-size: 11px; color: var(--text-secondary);">
+                        Expira: ${expires}
+                    </div>
+                </div>
+            `;
+            
+            // Adicionar no início
+            if (historyList.firstChild && historyList.firstChild.style.color === 'var(--text-secondary)') {
+                historyList.removeChild(historyList.firstChild);
+            }
+            
+            historyList.insertBefore(historyItem, historyList.firstChild);
+        }
+        
+        // Carregar histórico admin
+        function loadAdminHistory() {
+            const historyList = document.getElementById('adminHistoryList');
+            historyList.innerHTML = '';
+            
+            const keys = JSON.parse(localStorage.getItem('yakuza_keys') || '[]');
+            
+            if (keys.length === 0) {
+                historyList.innerHTML = `
+                    <div class="history-item" style="color: var(--text-secondary); text-align: center;">
+                        Nenhuma chave gerada ainda
+                    </div>
+                `;
+                return;
+            }
+            
+            // Ordenar por data (mais recente primeiro)
+            keys.sort((a, b) => new Date(b.generated) - new Date(a.generated));
+            
+            // Mostrar todas as chaves
+            keys.forEach(keyData => {
+                addToAdminHistory(keyData);
+            });
+        }
+        
+        // Adicionar mensagem ao console
+        function addToolsConsole(message, type = 'info') {
+            const consoleElement = document.getElementById('toolsConsole');
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            
+            const timestamp = new Date().toLocaleTimeString();
+            
+            if (type === 'success') {
+                line.style.color = 'var(--tool-1)';
+            } else if (type === 'error') {
+                line.style.color = 'var(--danger)';
+            } else {
+                line.style.color = 'var(--tool-5)';
+            }
+            
+            line.textContent = `[${timestamp}] ${message}`;
+            consoleElement.appendChild(line);
+            consoleElement.scrollTop = consoleElement.scrollHeight;
+            
+            if (consoleElement.children.length > 50) {
+                consoleElement.removeChild(consoleElement.firstChild);
+            }
+        }
+        
+        // Verificar chave ao entrar
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const savedKey = localStorage.getItem('active_yakuza_key');
+                if (savedKey) {
+                    try {
+                        const keyData = JSON.parse(savedKey);
+                        const expiration = new Date(keyData.expires);
+                        const now = new Date();
+                        
+                        if (now > expiration) {
+                            localStorage.removeItem('active_yakuza_key');
+                        }
+                    } catch (e) {
+                        localStorage.removeItem('active_yakuza_key');
+                    }
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
+```         const consoleOutput = document.getElementById('consoleOutput');
+            if (!consoleOutput) return;
+            
+            const timestamp = new Date().toLocaleTimeString();
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            line.style.padding = '8px 0';
+            line.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+            line.style.fontSize = '13px';
+            
+            switch(type) {
+                case 'success':
+                    line.style.color = 'var(--tool-green)';
+                    break;
+                case 'error':
+                    line.style.color = 'var(--danger)';
+                    break;
+                case 'info':
+                    line.style.color = 'var(--tool-blue)';
+                    break;
+                default:
+                    line.style.color = 'var(--text-secondary)';
+            }
+            
+            line.textContent = `[${timestamp}] ${message}`;
+            
+            consoleOutput.appendChild(line);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            
+            // Manter histórico limitado
+            consoleHistory.push({timestamp, message, type});
+            if (consoleHistory.length > 50) {
+                consoleHistory.shift();
+                if (consoleOutput.children.length > 50) {
+                    consoleOutput.removeChild(consoleOutput.firstChild);
+                }
+            }
+        }
+        
+        // Lançar Free Fire
+        function launchFreeFire() {
+            const progressBar = document.getElementById('fireProgressBar');
+            const progressText = document.getElementById('fireProgressText');
+            
+            // Simular processo de ativação
+            let progress = 0;
+            const steps = [
+                'Verificando sistema...',
+                'Conectando ao servidor YAKUZAS...',
+                'Ativando ferramentas...',
+                'Preparando Free Fire...',
+                'Redirecionando para o jogo...',
+                'Pronto! Free Fire aberto'
+            ];
+            
+            const interval = setInterval(() => {
+                progress += 20;
+                progressBar.style.width = `${progress}%`;
+                progressText.textContent = steps[progress / 20 - 1];
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    
+                    setTimeout(() => {
+                        // Fechar modal
+                        document.getElementById('fireModal').style.display = 'none';
+                        progressBar.style.width = '0%';
+                        progressText.textContent = 'Inicializando sistema de ativação...';
+                        
+                        // Tentar abrir o Free Fire
+                        openFreeFire();
+                        
+                        // Mostrar mensagem de sucesso
+                        addConsole('Free Fire ativado com sucesso!', 'success');
+                    }, 1000);
+                }
+            }, 600);
+        }
+        
+        // Função para abrir Free Fire
+        function openFreeFire() {
+            // Detectar dispositivo
+            const isAndroid = /android/i.test(navigator.userAgent);
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            
+            let deepLink = '';
+            
+            if (isAndroid) {
+                // Intent para Android
+                deepLink = SYSTEM_CONFIG.freeFireLinks.android;
+            } else if (isIOS) {
+                // URL Scheme para iOS
+                deepLink = SYSTEM_CONFIG.freeFireLinks.ios;
+            } else {
+                // Para navegadores desktop ou outros dispositivos
+                deepLink = SYSTEM_CONFIG.freeFireLinks.web;
+            }
+            
+            // Tentar abrir o link
+            try {
+                // Criar um link invisível para clicar
+                const link = document.createElement('a');
+                link.href = deepLink;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Fallback: se não abrir em 2 segundos, mostrar link
+                setTimeout(() => {
+                    const fallbackMessage = `
+                    🎮 FREE FIRE - YAKUZAS XITS 🎮
+                    
+                    Status das ferramentas:
+                    • Aimbot: ${toolStatus.aimbot ? '✅ ATIVADO' : '❌ DESATIVADO'}
+                    • Headtrick: ${toolStatus.headtrick ? '✅ ATIVADO' : '❌ DESATIVADO'}
+                    • Sistema YAKUZAS: ✅ ATIVADO
+                    
+                    Se o jogo não abriu automaticamente:
+                    1. Abra o Free Fire manualmente
+                    2. As ferramentas estarão ativas dentro do jogo
+                    3. Para suporte: (15) 99917-31963
+                    `;
+                    
+                    alert(fallbackMessage);
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Erro ao abrir Free Fire:', error);
+                
+                // Mensagem de fallback
+                const errorMessage = `
+                ⚠️ ERRO AO ABRIR FREE FIRE ⚠️
+                
+                Para ativar as ferramentas YAKUZAS XITS:
+                1. Abra o Free Fire manualmente no seu celular
+                2. As seguintes ferramentas estão ativas:
+                   - Aimbot: ${toolStatus.aimbot ? '✅' : '❌'}
+                   - Headtrick: ${toolStatus.headtrick ? '✅' : '❌'}
+                
+                3. As ferramentas funcionarão automaticamente no jogo
+                4. Suporte: (15) 99917-31963
+                
+                Sistema YAKUZAS XITS ativado com sucesso! 🎮
+                `;
+                
+                alert(errorMessage);
+            }
+        }
+        
+        // Proteções básicas
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12') {
+                e.preventDefault();
+                addConsole('Tentativa de acesso ao DevTools bloqueada', 'error');
+                return false;
+            }
+        });
+        
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            addConsole('Menu de contexto bloqueado', 'error');
+            return false;
+        });
+    </script>
+</body>
+</html>
+```
